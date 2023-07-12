@@ -2,6 +2,8 @@
 #![allow(unused_imports)]
 #![allow(unused_must_use)]
 
+use rustyline::error::ReadlineError;
+use rustyline::{DefaultEditor, Result};
 use std::io::{self, Write};
 use std::process::{exit, Command};
 use std::{env, path};
@@ -13,93 +15,77 @@ mod commands {
     pub mod pwd;
 }
 
-fn main() {
-    let mut _command_history: &[&str];
+fn main() -> Result<()> {
+    let mut rl = DefaultEditor::new()?;
+    #[cfg(feature = "with-file-history")]
+    if rl.load_history("history.txt").is_err() {
+        println!("No previous history.");
+    }
 
     loop {
         let dir = stringed_curr_dir();
+        let path = dir.display().to_string() + ":>> ";
 
-        print!("{}:>>", dir.display());
-        io::stdout().flush().unwrap();
+        let readline = rl.readline(&path);
 
-        let mut input = String::new();
-        io::stdin().read_line(&mut input).unwrap();
+        match readline {
+            Ok(line) => {
+                rl.add_history_entry(line.as_str());
 
-        let input = input.trim();
+                let input = line.trim();
 
-        let args: Vec<&str> = input.split(' ').collect();
-        if args.is_empty() {
-            continue;
-        }
+                let args: Vec<&str> = input.split(' ').collect();
+                if args.is_empty() {
+                    continue;
+                }
 
-        let command = args[0];
+                let command = args[0];
 
-        match command {
-            "ls" => {
-                commands::cm_w_output::cm_w_output(args, command);
+                match command {
+                    "ls" | "cat" | "man" | "echo" | "tail" | "head" => {
+                        commands::cm_w_output::cm_w_output(args, command);
+                    }
+                    "mkdir" | "touch" | "rm" | "rmdir" | "sudo" | "apt" | "cp" | "mv" | "chmod"
+                    | "unzip" | "ps" | "kill" => {
+                        commands::cm_no_output::cm_no_output(args, command);
+                    }
+                    "cd" => {
+                        commands::cd::cd(args);
+                    }
+                    "pwd" => {
+                        commands::pwd::pwd();
+                    }
+                    "exit" => {
+                        print!("Closing terminal...");
+                        exit(0);
+                    }
+                    _ => {
+                        eprintln!("Command not found: {command}");
+                    }
+                }
             }
-            "cd" => {
-                commands::cd::cd(args);
+
+            Err(ReadlineError::Interrupted) => {
+                println!("CTRL-C: Interrupted");
+                break;
             }
-            "cat" => {
-                commands::cm_w_output::cm_w_output(args, command);
+
+            Err(ReadlineError::Eof) => {
+                println!("CTRL-D: Exit");
+                break;
             }
-            "mkdir" | "touch" => {
-                commands::cm_no_output::cm_no_output(args, command);
-            }
-            "pwd" => {
-                commands::pwd::pwd();
-            }
-            "rm" | "rmdir" => {
-                commands::cm_no_output::cm_no_output(args, command);
-            }
-            "sudo" => {
-                commands::cm_no_output::cm_no_output(args, command);
-            }
-            "apt" => {
-                commands::cm_no_output::cm_no_output(args, command);
-            }
-            "cp" => {
-                commands::cm_no_output::cm_no_output(args, command);
-            }
-            "mv" => {
-                commands::cm_no_output::cm_no_output(args, command);
-            }
-            "man" => {
-                commands::cm_w_output::cm_w_output(args, command);
-            }
-            "chmod" => {
-                commands::cm_no_output::cm_no_output(args, command);
-            }
-            "unzip" => {
-                commands::cm_no_output::cm_no_output(args, command);
-            }
-            "echo" => {
-                commands::cm_w_output::cm_w_output(args, command);
-            }
-            "ps" => {
-                commands::cm_no_output::cm_no_output(args, command);
-            }
-            "kill" => {
-                commands::cm_no_output::cm_no_output(args, command);
-            }
-            "tail" => {
-                commands::cm_w_output::cm_w_output(args, command);
-            }
-            "head" => {
-                commands::cm_w_output::cm_w_output(args, command);
-            }
-            "exit" => {
-                print!("Closing terminal: exit code 0");
-                exit(0);
-            }
-            _ => {
-                eprintln!("Command not found: {command}");
+
+            Err(err) => {
+                println!("Error: {:?}", err);
+                break;
             }
         }
         // command_history.append(command);
         // statement to add the command introduced to the command_history array so when you hit the arrow up button you will type that command
     }
+    #[cfg(feature = "with-file-history")]
+    rl.save_history("history.txt");
+    Ok(())
 }
 
 fn stringed_curr_dir() -> path::PathBuf {
