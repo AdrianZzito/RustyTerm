@@ -7,12 +7,10 @@ use std::process::{exit, Command};
 use std::{env, path};
 
 mod commands {
-    pub mod cat;
     pub mod cd;
-    pub mod file_creation;
-    pub mod ls;
+    pub mod cm_no_output; // file_creation | rm
+    pub mod cm_w_output; // ls | cat
     pub mod pwd;
-    pub mod rm;
 }
 
 fn main() {
@@ -38,22 +36,58 @@ fn main() {
 
         match command {
             "ls" => {
-                commands::ls::ls(args);
+                commands::cm_w_output::cm_w_output(args, command);
             }
             "cd" => {
                 commands::cd::cd(args);
             }
             "cat" => {
-                commands::cat::cat(args);
+                commands::cm_w_output::cm_w_output(args, command);
             }
             "mkdir" | "touch" => {
-                commands::file_creation::file_creation(args, command);
+                commands::cm_no_output::cm_no_output(args, command);
             }
             "pwd" => {
                 commands::pwd::pwd();
             }
             "rm" | "rmdir" => {
-                commands::rm::rm(args, command);
+                commands::cm_no_output::cm_no_output(args, command);
+            }
+            "sudo" => {
+                commands::cm_no_output::cm_no_output(args, command);
+            }
+            "apt" => {
+                commands::cm_no_output::cm_no_output(args, command);
+            }
+            "cp" => {
+                commands::cm_no_output::cm_no_output(args, command);
+            }
+            "mv" => {
+                commands::cm_no_output::cm_no_output(args, command);
+            }
+            "man" => {
+                commands::cm_w_output::cm_w_output(args, command);
+            }
+            "chmod" => {
+                commands::cm_no_output::cm_no_output(args, command);
+            }
+            "unzip" => {
+                commands::cm_no_output::cm_no_output(args, command);
+            }
+            "echo" => {
+                commands::cm_w_output::cm_w_output(args, command);
+            }
+            "ps" => {
+                commands::cm_no_output::cm_no_output(args, command);
+            }
+            "kill" => {
+                commands::cm_no_output::cm_no_output(args, command);
+            }
+            "tail" => {
+                commands::cm_w_output::cm_w_output(args, command);
+            }
+            "head" => {
+                commands::cm_w_output::cm_w_output(args, command);
             }
             "exit" => {
                 print!("Closing terminal: exit code 0");
