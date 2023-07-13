@@ -14,3 +14,12 @@ These are some features that are comming in a close future to RustyTerm, of cour
 - Command history: you will be able to press upper arrow to auto type you latest commands
 - Improved prompt: featuring colors and more visual content as well as the availability to get customizable
 - Do you want any other feature? Post an issue or do it by yourself and post a PR, they are accepted!
+
+---
+
+## How to install
+RustyTerm can be installed in Linux and macOS, you just need to follow the steps indicated below to start using it:
+1. Go to the Releases tab, you can access there by clicking on "Releases" in the main page of the repository.
+2. Once you are in the Releases tab, go to the Assets deployable menu on the latest available version, there you will see some files, you just need to download the called "RustyTerm-vX.X.X"
+3. Now you have the terminal installed, now if you double click on it it will open and you will be able to use it normally, but if you want to set RustyTerm permanently on your system, you have add to the top of your shell startup file (.bashrc, .bash_profile, .zshrc...) the following line: 
+``` export SHELL=/path/of/the/shell/executable ```

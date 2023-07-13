@@ -57,3 +57,7 @@ Here you have the list of the new commands available in RustyTerm:
 - Vim
 
 Also, we have now available the official documentation of the project at docs.rs/
+
+-v0.1.4:
+---
+In v0.1.4 we are including pipes!! Now don't be scared of using pipes becasuse they work perfectly! 

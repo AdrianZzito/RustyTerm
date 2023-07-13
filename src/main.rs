@@ -13,6 +13,7 @@ mod commands {
     pub mod cd;
     pub mod cm_no_output; // file_creation | rm
     pub mod cm_w_output; // ls | cat
+    pub mod pipes;
     pub mod pwd;
     pub mod text_editor;
 }
@@ -41,6 +42,13 @@ fn main() -> Result<()> {
 
                 let input = line.trim();
 
+                let pipes: Vec<&str> = input.split('|').map(|x| x.trim()).collect();
+                if pipes.is_empty() {
+                    continue;
+                } else {
+                    commands::pipes::pipes(pipes);
+                }
+
                 let args: Vec<&str> = input.split(' ').collect();
                 if args.is_empty() {
                     continue;
@@ -49,7 +57,7 @@ fn main() -> Result<()> {
                 let command = args[0];
 
                 match command {
-                    "ls" | "cat" | "man" | "echo" | "tail" | "head" => {
+                    "ls" | "cat" | "man" | "echo" | "tail" | "head" | "grep" => {
                         commands::cm_w_output::cm_w_output(args, command);
                     }
                     "mkdir" | "touch" | "rm" | "rmdir" | "sudo" | "apt" | "cp" | "mv" | "chmod"
