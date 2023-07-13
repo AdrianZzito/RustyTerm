@@ -8,21 +8,27 @@ use std::io::{self, Write};
 use std::process::{exit, Command};
 use std::{env, path};
 
+// Access to the files containing the command functions
 mod commands {
     pub mod cd;
     pub mod cm_no_output; // file_creation | rm
     pub mod cm_w_output; // ls | cat
     pub mod pwd;
+    pub mod text_editor;
 }
 
 fn main() -> Result<()> {
+    // Input line creation
     let mut rl = DefaultEditor::new()?;
+
+    // File history logger
     #[cfg(feature = "with-file-history")]
     if rl.load_history("history.txt").is_err() {
         println!("No previous history.");
     }
 
     loop {
+        // Casting path as a String to it's usage on the prompt
         let dir = stringed_curr_dir();
         let path = dir.display().to_string() + ":>> ";
 
@@ -30,6 +36,7 @@ fn main() -> Result<()> {
 
         match readline {
             Ok(line) => {
+                // Entry addition to the command history
                 rl.add_history_entry(line.as_str());
 
                 let input = line.trim();
@@ -54,6 +61,9 @@ fn main() -> Result<()> {
                     }
                     "pwd" => {
                         commands::pwd::pwd();
+                    }
+                    "nano" | "vim" => {
+                        commands::text_editor::text_editor(args, command);
                     }
                     "exit" => {
                         print!("Closing terminal...");
@@ -83,6 +93,8 @@ fn main() -> Result<()> {
         // command_history.append(command);
         // statement to add the command introduced to the command_history array so when you hit the arrow up button you will type that command
     }
+
+    // Saving file history
     #[cfg(feature = "with-file-history")]
     rl.save_history("history.txt");
     Ok(())

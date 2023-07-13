@@ -7,7 +7,7 @@ pub fn cd(args: Vec<&str>) {
         eprintln!("cd: missing directory")
     } else {
         let directory = args[1];
-        if let Err(err) = env::set_current_dir(&directory) {
+        if let Err(err) = env::set_current_dir(directory) {
             eprintln!("cd: {err}");
         }
     }

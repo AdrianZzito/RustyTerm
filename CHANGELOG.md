@@ -46,3 +46,14 @@ Also, we are introducing **command history!** Use the upper arrow to auto type t
 For the future we want to introduce **auto completion** as well as **syntax highlighting** for the input line, as well as increasing the number of commands available on the terminal.
 
 In a more technical view, we keep refactoring the code, specifically the match command argument, we are grouping the commands that use the same functions so it keeps easy to maintain and with a high legibility.
+
+- v0.1.3:
+---
+Being able to edit text or code in the terminal is so important, can you use a terminal without a text editor included? I can't! For that reason we are including nano and vim into the list of available commands.
+
+Here you have the list of the new commands available in RustyTerm:
+
+- Nano
+- Vim
+
+Also, we have now available the official documentation of the project at docs.rs/

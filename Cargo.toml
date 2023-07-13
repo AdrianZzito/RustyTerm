@@ -1,8 +1,15 @@
 [package]
 name = "RustyTerm"
-version = "0.1.2"
+version = "0.1.2.1"
 authors = ["Adrian Castilla <54941915+AdrianZzito@users.noreply.github.com>"]
 edition = "2018"
+rust-version = "1.70"
+description = "RustyTerm is an advanced terminal fully build in Rust."
+documentation = "https://docs.rs/rustyterm"
+readme = "README.md"
+repository = "https://github.com/AdrianZzito/RustyTerm.git"
+license = "MIT"
+license-file = "LICENSE"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
