@@ -12,7 +12,7 @@ use std::{env, path};
 mod commands {
     pub mod cd;
     pub mod cm_no_output; // file_creation | rm
-    pub mod cm_w_output; // ls | catsfdkjnfdjknf
+    pub mod cm_w_output; // ls | cat
     pub mod pwd;
     pub mod text_editor;
 }
